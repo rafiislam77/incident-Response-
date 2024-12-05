@@ -133,3 +133,162 @@ All staff members at Nova Scotia Power are responsible for:
 ## Severity Matrix 
 The Incident Severity Matrix categorizes incidents into four levels of severity: Critical, High, Medium, and Low. Each category is associated with specific actions that must be taken by the CSIRT. <br>
 ![image](https://github.com/user-attachments/assets/38b0c760-4074-4e69-9509-5714fe867b68)
+
+### Response Actions:
+-	For Critical incidents, immediate executive involvement, legal consultation, and external communication are required, led by Peter Gregg, Judith Ferguson, and the Incident Handler, Shoaib Qabil Badshah. The full CSIRT will be activated, including all necessary engineers and communication personnel.
+-	For High incidents, similar responses are initiated, though without the immediate need for broad public communication unless data loss or reputational damage is suspected.
+-	Medium severity incidents may require focused efforts from specific departments or teams, coordinated by the Incident Handler, and may not necessitate full CSIRT activation.
+-	Low severity incidents will often be handled locally, with the CSIRT being notified for documentation and further monitoring. <br>
+
+## Incident Handling Process Overview (PICERL Model)
+In the event of a cybersecurity incident, Nova Scotia Power's Cyber Security Incident Response Team (CSIRT) will adhere to the following PICERL process:
+### Preparation
+Preparation focuses on preparing the CSIRT to handle incidents by ensuring that all team members, tools, and processes are in place and operational.
+Procedures:
+-	Conduct regular security awareness training: Ensure all employees, especially CSIRT members, are trained in incident response procedures. Train personnel on incident types like ransomware, unauthorized access, and privacy breaches.
+-	Develop and maintain documentation: Ensure that the CSIRT has access to current policies, incident response plans, contact lists, and system architecture diagrams.
+-	Ensure monitoring tools are active:
+-	Deploy intrusion detection systems (IDS), firewall logs, and SIEM systems.
+-	Ensure backups of critical systems are regularly updated and stored securely.
+-	Practice incident response drills: Conduct simulations to test the team’s readiness {NIST 7 Step Process (Cyber Security Immersive), n.d.}.
+
+-	Command:
+    -	sudo systemctl start fail2ban (Activate Fail2Ban service to monitor and block suspicious activity)
+    -	iptables -L (Ensure firewall rules are set up correctly)
+________________________________________
+### 2. Identification
+Identification focuses on detecting and confirming the presence of an incident.
+Procedures:
+-	Review alerts from monitoring tools: Gather data from logs, firewalls, IDS, antivirus software, and SIEM systems to identify anomalous behavior.
+-	Analyze error messages and reports: Review system and network logs for suspicious activity such as unauthorized access attempts or service interruptions (DoS/DDoS).
+-	Use automated threat intelligence tools to correlate alerts with known incidents.
+-	Command:
+    -	sudo tail /var/log/auth.log (Check recent authentication attempts)
+    -	grep "error" /var/log/syslog (Search for errors in the system log)
+    - sudo netstat -ntlp (Check network connections for suspicious activity) (Desai & Desai, 2024)
+- Actions:
+    -	If malware or phishing activity is detected, escalate to Incident Handler.
+    -	Ensure key stakeholders such as Lia MacDonald (VP Customer Experience & Innovation) and Judith Ferguson (EVP Regulatory Legal & Business Planning) are informed.
+________________________________________
+### 3. Containment
+Containment focuses on limiting the damage caused by the incident and preventing further damage.
+Procedures:
+-	Isolate affected systems: Disconnect compromised systems from the network to prevent the spread of malware or further unauthorized access.
+-	Establish short-term containment:
+	Implement temporary solutions such as firewall rules or shutting down affected services.
+-	Long-term containment:
+-	Apply patches or security updates to affected systems after confirming they are clean.
+-	Command:
+    -	sudo ifconfig eth0 down (Disable network interface to isolate a server)
+    -	iptables -A INPUT -s [IP_ADDRESS] -j DROP (Block malicious IP address) (Desai & Desai, 2024)
+-	Actions:
+    -	Notify Rehan Khalid (Outage Coordinator Engineer) and Ron MacDougall (Sr. Engineer System Security) for containment actions.
+    -	Ensure external stakeholders (e.g., legal, PR, and affected clients) are informed by Communications Expert.
+
+### 4. Eradication
+Eradication focuses on removing the threat from the network and ensuring that all traces of the incident have been fully addressed.
+Procedures:
+-	Remove malicious code or unauthorized access points: Use anti-malware tools or manual processes to eradicate threats.
+-	Identify and close vulnerabilities: Implement software patches or reconfigure network settings to close the vulnerability that led to the incident (e.g., close open ports, fix weak passwords).
+-	Command:
+    -	sudo clamscan -r /home (Scan home directory for malware) (Desai & Desai, 2024)
+    - sudo apt-get update && sudo apt-get upgrade (Update system to apply security patches) (Desai & Desai, 2024)
+-	Actions:
+    -	Ensure involvement of Mohit Agarwal (Engineer) and Pushpendra Singh (System Security Engineering Specialist) for technical eradication tasks.
+
+### 5. Recovery
+Recovery focuses on restoring affected systems to normal operation after the threat has been removed.
+Procedures:
+-	Restore from backups: Ensure that systems are restored from clean backups where necessary.
+-	Test and validate systems: Ensure that systems are fully operational and secure by running tests to confirm no residual threats exist.
+-	Monitor for anomalies: Continue to monitor systems closely for signs of reinfection or new attacks.
+-	Command:
+    -  sudo restore /backup/critical_data (Restore data from a verified backup) 
+    -	 ping -c 5 [SERVER_IP] (Test connectivity to ensure restoration is complete) (Desai & Desai, 2024)
+-	Actions:
+    -	Coordinate with Hannah Lawrence (Outage Plan Coordinator) and Cali Beck (Business Analyst) to ensure full system recovery.
+
+### 6. Lessons Learned
+Lessons Learned focuses on reviewing the incident after it is resolved to identify ways to improve the organization’s defenses and incident response processes.
+Procedures:
+-	Post-incident review meeting: Hold a meeting with CSIRT members to evaluate how well the incident was handled, what went wrong, and what improvements can be made.
+-	Document findings: Create a formal report summarizing the incident, the response, and the key takeaways. Include details such as whether malicious code or unauthorized access was detected, and how it was handled.
+-	Implement changes: Use the lessons learned to update security policies, incident response plans, and CSIRT processes.
+-	Actions:
+    -	Ensure involvement of executives like Peter Gregg (President & CEO) to make final decisions on improving the incident response strategy.
+
+
+
+
+## Incident-Specific Handling Processes
+### Data Breach:
+-	Steps:
+    -	Isolate affected data systems.
+    -	Notify affected stakeholders.
+    -	Follow legal requirements for data breach notification under provincial/federal laws.
+    -	Involve Judith Ferguson (Legal) and Communications Expert to handle media and regulatory responses.
+### Ransomware:
+-	Steps:
+    -	Isolate the infected system immediately.
+    -	Do not pay the ransom; attempt to recover using backups.
+    -	Notify legal and PR teams for potential public disclosure.
+    -	Coordinate with System Security Engineers like Eric Henderson to identify the point of entry.
+     <br>
+### Tampering of Payment Terminals:
+-	Steps:
+     -	Disconnect affected terminals from the network.
+     -	Investigate for signs of physical tampering.
+     -	Coordinate with financial institutions for fraud prevention.
+### Widespread Service Interruption:
+-	Steps:
+    -	Engage Ron MacDougall and Shoaib Qabil Badshah to assess the extent of the outage.
+    -	Prioritize restoring critical services and escalate communication efforts with affected clients.
+### Loss of Equipment:
+- Steps:
+    -	Report the loss to legal and the insurance provider.
+    -	Disable access credentials associated with the lost equipment.
+    -	Notify the CSIRT team to begin tracking potential unauthorized access attempts.
+
+## Approvals
+### Responsible Party
+Responsibility for the security of Nova Scotia Power's company and customer information resides with the following responsible party: <br>
+The responsible party, Judith Ferguson, has reviewed the incident response plan and delegates the responsibility for mitigating harm to the organization to the Incident Handler or their delegate. <br>
+![image](https://github.com/user-attachments/assets/b21a0c11-1141-417c-a072-77a77ea4f1f3)
+
+
+
+During times when a high or critical cybersecurity incident is underway, this responsibility is entrusted to the Incident Handler. <br>
+
+## Incident Handler
+The incident handler has reviewed the security incident response plan and acknowledges that, when a high or critical cybersecurity incident is underway, responsibility for managing the incident is entrusted to them or their delegate. <br>
+The incident handler or their delegate is expected to manage the incident to mitigate further exposure to the organization. The incident will be handled according to the PICERL process: Identification, Containment, Eradication, Recovery, and Lessons Learned.<br>
+
+![image](https://github.com/user-attachments/assets/8e151a51-06cc-4282-9a4a-c94cd33547ff)
+
+
+
+### Escalation Scenario
+In the event that a high or critical cybersecurity incident occurs and the Incident Handler is unavailable, the following escalation process will be enacted:
+- 1.	Initial Assessment by CSIRT:
+The CSIRT, led by Eric Henderson (System Security Engineer), will conduct an initial assessment of the incident severity to determine if it meets the criteria for escalation.
+- 2.	Delegation to Deputy Incident Handler:
+If the Incident Handler is unavailable, authority will be escalated to the Deputy Incident Handler, Shoaib Qabil Badshah (Engineer System Security). The Deputy will take full responsibility for leading the response.
+- 3.	Escalation to Senior Management:
+If the situation worsens or becomes more critical, Peter Gregg (President & CEO) and Lia MacDonald (VP Customer Experience & Innovation) will be notified for senior-level oversight and decision-making.
+- 4.	External Notification:
+Depending on the incident, external stakeholders, including legal counsel, regulatory bodies, and affected clients, will be informed by the Communications Expert and Legal Team, led by Judith Ferguson.
+- 5.	Approval for Additional Resources:
+If required, the Incident Handler or Deputy Incident Handler will request additional technical or financial resources from senior management to contain and mitigate the incident.
+- 6.	Post-Incident Review:
+After containment, Hannah Lawrence (Outage Plan Coordinator) and Cali Beck (Business Analyst) will lead a post-incident review session with senior management to ensure that lessons learned are incorporated into the updated incident response plan.
+<br>
+
+
+## References
+
+- Government of Canada, Innovation, Science and Economic Development Canada, Office of the Deputy Minister, Digital Transformation Service Sector & Digital Transformation Service Sector. (2021d, December 8). Develop an Incident Response Plan: Fillable template and example. https://ised-isde.canada.ca/site/cybersecure-canada/en/certification-tools/develop-incident-response-plan-fillable-template-and-example
+- Gregg, P., Smith, C., Ferguson, J., MacDonald, L., Pickles, D., NSP, Energy Delivery (Transmission) Function Employees, Wholesale Merchant Function Employees, & Power Production (Generation) Function Employees. (2024). SOC-006 Organizational chart (pp. 1–20). https://www.nspower.ca/docs/default-source/monthly-reports/oatt-soc-006---organizational-chart.pdf?sfvrsn=fe306a56_43
+- NIST 7 step Process (Cyber Security Immersive). (n.d.). https://web.compass.lighthouselabs.ca/p/14/3101252b-f113-44d0-98b4-79d14da77185
+- NIST 7 step Process (Cyber Security Immersive). (n.d.). https://web.compass.lighthouselabs.ca/p/14/3101252b-f113-44d0-98b4-79d14da77185
+- Information Security Policy Templates | SANS Institute. (n.d.). https://www.sans.org/information-security-policy/?category=incident-handling
+- Desai, N., & Desai, N. (2024, February 5). Top Advanced Linux Commands: Way To become an administrator - cloudyuga.guru. cloudyuga.guru -. https://cloudyuga.guru/blogs/top-advanced-linux-commands-way-to-become-an-administrator/
